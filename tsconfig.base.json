@@ -16,11 +16,5 @@
       "es2018",
       "dom"
     ]
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "enableIvy": true,
-    "strictTemplates": true,
-    "strictInjectionParameters": true
   }
 }
