@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { ImaggingComponent } from './pages/imagging/imagging.component';
 import { ListingComponent } from './pages/listing/listing.component';
-import { Error404Component } from './MISC/error404/error404.component';
+import { Error404Component } from './pages/error404/error404.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full'},

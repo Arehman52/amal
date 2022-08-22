@@ -1,3 +1,17 @@
-<div class="m-0 p-0">
+<div class="container-fluid m-0 p-0">  <!-- Outermost container -->
+  <div class="row topNav" *ngIf="loggedIn">
+    <div class="col-md-12 col-sm-6 text-right">
+
+      <span class="text-left shadow-sm pr-2">
+        USERNAME
+      </span>
+
+      <button type="button" class="btn btn-info m-auto">
+        Log out <i class="fa fa-sign-out" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
   <router-outlet></router-outlet>
+
 </div>
