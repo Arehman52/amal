@@ -1,6 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+
+*{
+  box-sizing: border-box;
+}
+.row {
+  margin: 0 !important;
+}
 body{
-  margin: 0;
+  margin: 0px;
+  padding: 0px;
+  /* overflow-x: hidden; */
   font: 110%/1.5 system-ui, sans-serif;
 
   /* font-family: "Roboto", sans-serif; */
@@ -15,3 +24,10 @@ body{
 }
 /* .bg-gradient-index{background-image: linear-gradient(to left bottom, #164080, #004d86, #005888, #006388, #0e6d87); }*/
 
+
+.WINDOW_BORDERS {
+  padding: 20px;
+  margin: 0px 0.5px 0.5px 0.5px;
+  border: 2px solid #63681d;
+  border-radius: 3px;
+}
