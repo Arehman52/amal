@@ -1,11 +1,8 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import * as OpenSeadragon from 'openseadragon';
-// import { Annotorious } from 'openseadragon-annotations';
+declare var OpenSeadragon: any;
+declare var Annotorious: any;
 
-
-
-// declare var OpenSeadragon: any;
 
 @Component({
   selector: 'app-imagging',
@@ -13,6 +10,7 @@ import * as OpenSeadragon from 'openseadragon';
   styleUrls: ['./imagging.component.css']
 })
 export class ImaggingComponent implements OnInit {
+  constructor() { }
 
   viewer: any;
   dibujar = false;
@@ -32,39 +30,50 @@ export class ImaggingComponent implements OnInit {
     }
   };
 
-  constructor(private ngZone: NgZone) { }
+  sampleAnnotation = {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "#09475897-d2eb-4dce-aa12-ecb50771c734",
+    "type": "Annotation",
+    "body": [{
+        "type": "TextualBody",
+        "value": "Annotation"
+    }],
+    "target": {
+        "selector": {
+            "type": "FragmentSelector",
+            "conformsTo": "http://www.w3.org/TR/media-frags/",
+            "value": "xywh=540,240,180,340"
+        }
+    }
+}
+
+
 
   ngOnInit() {
 
 
-    const viewer = OpenSeadragon({
-      id: 'openseadragon1',
-      showNavigator:  true,
+    var viewer = OpenSeadragon({
+      id: "openseadragon",
       prefixUrl: "https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/",
-      tileSources: this.duomo
+      tileSources: {
+          type: "image",
+          url: "assets/js/openseadragon/image.jpg"
+      }
   });
 
-  viewer;
-  debugger
-
-  // const annotations = Annotorious({ viewer });
-
-
-  }
-
-
-init(){
-
-
-
-
-  this.viewer = OpenSeadragon({
-    id: "openseadragon1",
-    prefixUrl: "https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/",
-    tileSources: this.duomo
+  var anno = OpenSeadragon.Annotorious(viewer, {
+      locale: 'auto',
+      allowEmpty: true
   });
-}
 
+
+  Annotorious.Toolbar(anno, document.getElementById('toolbar'));
+
+
+  anno.addAnnotation(this.sampleAnnotation);
+
+
+   }
 
 }
 
