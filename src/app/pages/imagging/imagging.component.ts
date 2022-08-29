@@ -44,8 +44,6 @@ export class ImaggingComponent implements OnInit {
       tileSources: this.duomo
   });
 
-  viewer;
-  debugger
 
   // const annotations = Annotorious({ viewer });
 
