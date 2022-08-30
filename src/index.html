@@ -15,49 +15,9 @@
   <script type="text/javascript" src="assets/js/openseadragon/openseadragon.3.0.0.min.js"></script>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@recogito/annotorious-openseadragon@2.7.7/dist/annotorious.min.css">
             <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@recogito/annotorious-openseadragon@2.7.7/dist/openseadragon-annotorious.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@recogito/annotorious-toolbar@0.1.1/dist/annotorious-toolbar.min.js"></script>
-            <!-- <script>
-                var sampleAnnotation = {
-                    "@context": "http://www.w3.org/ns/anno.jsonld",
-                    "id": "#07475897-d2eb-4dce-aa12-ecb50771c734",
-                    "type": "Annotation",
-                    "body": [{
-                        "type": "TextualBody",
-                        "value": "Annotation"
-                    }],
-                    "target": {
-                        "selector": {
-                            "type": "FragmentSelector",
-                            "conformsTo": "http://www.w3.org/TR/media-frags/",
-                            "value": "xywh=540,240,180,340"
-                        }
-                    }
-                };
+            <!-- <script src="https://cdn.jsdelivr.net/npm/@recogito/annotorious-toolbar@0.1.1/dist/annotorious-toolbar.min.js"></script> -->
 
-                window.onload = function() {
-                    var viewer = OpenSeadragon({
-                        id: "openseadragon",
-                        prefixUrl: "src/assets/js/openseadragon/images/",
-                        tileSources: {
-                            type: "image",
-                            url: "src/assets/js/openseadragon/images/image.jpg"
-                        },
-                        gestureSettingsTouch: {
-                            pinchRotate: true
-                        }
-                    });
-
-                    var anno = OpenSeadragon.Annotorious(viewer, {
-                        locale: 'auto',
-                        allowEmpty: true
-                    });
-
-
-                    Annotorious.Toolbar(anno, document.getElementById('toolbar'));
-
-
-                    anno.addAnnotation(sampleAnnotation);
-                }
-            </script> -->
+            <!-- Selector Pack plugin -->
+            <script src="https://cdn.jsdelivr.net/npm/@recogito/annotorious-selector-pack@latest/dist/annotorious-selector-pack.min.js"></script>
 </body>
 </html>
