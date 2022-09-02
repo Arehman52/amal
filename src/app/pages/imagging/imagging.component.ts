@@ -9,10 +9,9 @@ declare var Annotorious: any;
   styleUrls: ['./imagging.component.css'],
 })
 export class ImaggingComponent implements OnInit {
-  constructor() {}
-
   viewer: any;
   anno: any;
+  LIST: any[] = [];
 
   duomo = {
     Image: {
@@ -47,8 +46,12 @@ export class ImaggingComponent implements OnInit {
     },
   };
 
+  constructor() {
+    this.LIST = [];
+  }
+
   ngOnInit() {
-    var viewer = OpenSeadragon({
+    this.viewer = OpenSeadragon({
       id: 'openseadragon',
       prefixUrl:
         'https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/',
@@ -58,9 +61,12 @@ export class ImaggingComponent implements OnInit {
       },
     });
 
-    this.anno = OpenSeadragon.Annotorious(viewer, {
+    this.anno = OpenSeadragon.Annotorious(this.viewer, {
       locale: 'auto',
       allowEmpty: true,
+      drawOnSingleClick: false,
+      hotkey: { key: 'shift', inverted: true },
+      disableEditor: true,
     });
 
     this.anno.addAnnotation(this.sampleAnnotation);
@@ -70,14 +76,26 @@ export class ImaggingComponent implements OnInit {
 
 
     // Add event handlers using .on
-    this.anno.on('createAnnotation', this.saveAnnotation);
+    this.anno.on('createAnnotation', (e: any) => {
+      if(e){
+        this.LIST.push(e);
+      }
+    });
   }
 
   setTool(tool?: string) {
     this.anno.setDrawingTool(tool);
   }
 
-  saveAnnotation(e){
-    debugger
+  saveAnnotation(e: any) {
+    let that = this;
+    if(e){
+      console.log(e);
+      that.LIST.push(e['id']);
+    }
+  }
+
+  openAnnotation(annot: any) {
+    this.anno.selectAnnotation(annot);
   }
 }
