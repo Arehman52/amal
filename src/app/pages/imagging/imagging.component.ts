@@ -32,34 +32,54 @@ export class ImaggingComponent implements OnInit {
     id: '#09475897-d2eb-4dce-aa12-ecb50771c734',
     type: 'Annotation',
     body: [
-      {
-        type: 'TextualBody',
-        value: 'Annotation',
-      },
+        {
+            type: 'TextualBody',
+            value: 'Annotation',
+        },
     ],
     target: {
-      selector: {
-        type: 'FragmentSelector',
-        conformsTo: 'http://www.w3.org/TR/media-frags/',
-        value: 'xywh=540,240,180,340',
-      },
+        selector: {
+            type: 'FragmentSelector',
+            conformsTo: 'http://www.w3.org/TR/media-frags/',
+            value: 'xywh=1940,240,980,740',
+        },
     },
-  };
+};
 
   constructor() {
     this.LIST = [];
   }
 
   ngOnInit() {
+    // ////////////////////IF IMAGE TO BE ADDED LOCALLY!!!!!
+    // this.viewer = OpenSeadragon({
+    //   id: 'openseadragon',
+    //   prefixUrl:
+    //   'https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/',
+    //   tileSources: {
+    //     type: 'image',
+    //     url: 'assets/js/openseadragon/image.jpg',
+    //   },
+    // });
+    // ////////////////////IF IMAGE TO BE ADDED LOCALLY!!!!!
+
     this.viewer = OpenSeadragon({
       id: 'openseadragon',
       prefixUrl:
-        'https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/',
-      tileSources: {
-        type: 'image',
-        url: 'assets/js/openseadragon/image.jpg',
-      },
-    });
+          'https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/',
+
+
+      sequenceMode: true,
+      tileSources: [
+          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000001.jp2/info.json",
+          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000002.jp2/info.json",
+          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000003.jp2/info.json",
+          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000004.jp2/info.json",
+          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000005.jp2/info.json",
+          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json",
+          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000007.jp2/info.json"
+      ]
+  });
 
     this.anno = OpenSeadragon.Annotorious(this.viewer, {
       locale: 'auto',
