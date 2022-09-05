@@ -13,38 +13,24 @@ export class ImaggingComponent implements OnInit {
   anno: any;
   LIST: any[] = [];
 
-  duomo = {
-    Image: {
-      xmlns: 'http://schemas.microsoft.com/deepzoom/2008',
-      Url: '//openseadragon.github.io/example-images/duomo/duomo_files/',
-      Format: 'jpg',
-      Overlap: '2',
-      TileSize: '256',
-      Size: {
-        Width: '13920',
-        Height: '10200',
-      },
-    },
-  };
-
   sampleAnnotation = {
     '@context': 'http://www.w3.org/ns/anno.jsonld',
     id: '#09475897-d2eb-4dce-aa12-ecb50771c734',
     type: 'Annotation',
     body: [
-        {
-            type: 'TextualBody',
-            value: 'Annotation',
-        },
+      {
+        type: 'TextualBody',
+        value: 'Annotation',
+      },
     ],
     target: {
-        selector: {
-            type: 'FragmentSelector',
-            conformsTo: 'http://www.w3.org/TR/media-frags/',
-            value: 'xywh=1940,240,980,740',
-        },
+      selector: {
+        type: 'FragmentSelector',
+        conformsTo: 'http://www.w3.org/TR/media-frags/',
+        value: 'xywh=1940,240,980,740',
+      },
     },
-};
+  };
 
   constructor() {
     this.LIST = [];
@@ -66,7 +52,7 @@ export class ImaggingComponent implements OnInit {
     this.viewer = OpenSeadragon({
       id: 'openseadragon',
       prefixUrl:
-          'https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/',
+        'https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/',
 
 
       sequenceMode: true,
@@ -79,7 +65,7 @@ export class ImaggingComponent implements OnInit {
           "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json",
           "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000007.jp2/info.json"
       ]
-  });
+    });
 
     this.anno = OpenSeadragon.Annotorious(this.viewer, {
       locale: 'auto',
@@ -111,7 +97,7 @@ export class ImaggingComponent implements OnInit {
     let that = this;
     if(e){
       console.log(e);
-      that.LIST.push(e['id']);
+      that.LIST.push(e);
     }
   }
 
