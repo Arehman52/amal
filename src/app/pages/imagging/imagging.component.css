@@ -1,1 +1,7 @@
 
+.long{
+
+  border: 10px solid yellow;
+  border-radius: 10px;
+  padding: 20px;
+}

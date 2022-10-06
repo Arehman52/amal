@@ -7,6 +7,8 @@
       <tr>
         <th>open</th>
       </tr>
+      <tr><td><button class="btn btn-info btn-sm" (click)="cancelSelected()">Cancel Selected</button></td></tr>
+      <tr><td><button class="btn btn-info btn-sm" (click)="clearAnnotations();">anno.clearAnnotations();</button></td></tr>
 
       <ng-container *ngIf="LIST != null">
         <tr *ngFor="let item of LIST">
@@ -21,7 +23,7 @@
     <h3>Canvas</h3>
     <div>
       <button class="btn btn-primary btn-sm mr-1" (click)="setTool('circle')">
-        Circle
+        Circle 
       </button>
       <button class="btn btn-primary btn-sm mr-1" (click)="setTool('ellipse')">
         Elipse

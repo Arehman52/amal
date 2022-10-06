@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 
 declare var OpenSeadragon: any;
@@ -54,21 +55,25 @@ export class ImaggingComponent implements OnInit {
       prefixUrl:
         'https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/',
 
-
+      preserveViewport: true,
+      visibilityRatio: 1,
+      minZoomLevel: 1,
+      defaultZoomLevel: 1,
       sequenceMode: true,
       tileSources: [
-          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000001.jp2/info.json",
-          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000002.jp2/info.json",
-          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000003.jp2/info.json",
-          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000004.jp2/info.json",
-          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000005.jp2/info.json",
-          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json",
-          "https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000007.jp2/info.json"
-      ]
+        'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000001.jp2/info.json',
+        'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000002.jp2/info.json',
+        'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000003.jp2/info.json',
+        'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000004.jp2/info.json',
+        'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000005.jp2/info.json',
+        'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json',
+        'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000007.jp2/info.json',
+      ],
     });
 
     this.anno = OpenSeadragon.Annotorious(this.viewer, {
       locale: 'auto',
+      formatter: this.formatter,
       allowEmpty: true,
       drawOnSingleClick: false,
       hotkey: { key: 'shift', inverted: true },
@@ -80,12 +85,20 @@ export class ImaggingComponent implements OnInit {
     // Init the plugin
     Annotorious.SelectorPack(this.anno);
 
-
     // Add event handlers using .on
-    this.anno.on('createAnnotation', (e: any) => {
-      if(e){
-        this.LIST.push(e);
+    this.anno.on('createAnnotation', async (selection: any) => {
+      if (selection) {
+        debugger
+        selection.body = [{
+          type: 'TextualBody',
+          purpose: 'tagging',
+          value: 'MyTag'
+        }];
+        this.LIST.push(selection);
       }
+      // Make sure to wait before saving!
+      await this.anno.updateSelected(selection);
+      this.anno.saveSelected();
     });
   }
 
@@ -93,9 +106,16 @@ export class ImaggingComponent implements OnInit {
     this.anno.setDrawingTool(tool);
   }
 
+  cancelSelected() {
+    this.anno.cancelSelected();
+  }
+
+  clearAnnotations() {
+    this.anno.clearAnnotations();
+  }
   saveAnnotation(e: any) {
     let that = this;
-    if(e){
+    if (e) {
       console.log(e);
       that.LIST.push(e);
     }
@@ -103,5 +123,26 @@ export class ImaggingComponent implements OnInit {
 
   openAnnotation(annot: any) {
     this.anno.selectAnnotation(annot);
+    this.anno.fitBoundsWithConstraints(annot, false);
+
+    const { snippet, transform } = this.anno.getImageSnippetById(annot?.id);
+    debugger;
   }
+
+  formatter = function (annotation) {
+    var longComments = annotation.bodies.filter(function (body) {
+      var isComment =
+        body.type === 'TextualBody' &&
+        (body.purpose === 'commenting' || body.purpose === 'replying');
+
+      var isLong = body.value.length > 100;
+
+      return isComment && isLong;
+    });
+
+    if (longComments.length > 0) {
+      // This annotation contains long comments - add CSS class
+      return 'long';
+    }
+  };
 }
