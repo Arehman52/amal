@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 declare var OpenSeadragon: any;
 declare var Annotorious: any;
@@ -9,7 +9,7 @@ declare var Annotorious: any;
   templateUrl: './imagging.component.html',
   styleUrls: ['./imagging.component.css'],
 })
-export class ImaggingComponent implements OnInit {
+export class ImaggingComponent implements OnInit, AfterViewInit {
   viewer: any;
   anno: any;
   LIST: any[] = [];
@@ -36,6 +36,29 @@ export class ImaggingComponent implements OnInit {
   constructor() {
     this.LIST = [];
   }
+  ngAfterViewInit(): void {
+    // Add event handlers using .on
+    this.anno.on('createAnnotation', async (selection: any) => {
+      debugger
+      this.anno.setDrawingEnabled(false);
+      if (selection) {
+        debugger
+        selection.body = [{
+          type: 'TextualBody',
+          purpose: 'tagging',
+          value: 'MyTag'
+        }];
+        this.LIST.push(selection);
+      }
+      // Make sure to wait before saving!
+      await this.anno.updateSelected(selection);
+      this.anno.saveSelected();
+    });
+
+    this.anno.on('selectAnnotation', function(annotation) {
+      // The users has selected an existing annotation
+    });
+  }
 
   ngOnInit() {
     // ////////////////////IF IMAGE TO BE ADDED LOCALLY!!!!!
@@ -51,14 +74,18 @@ export class ImaggingComponent implements OnInit {
     // ////////////////////IF IMAGE TO BE ADDED LOCALLY!!!!!
 
     this.viewer = OpenSeadragon({
-      id: 'openseadragon',
-      prefixUrl:
-        'https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/',
-
-      preserveViewport: true,
-      visibilityRatio: 1,
+      id: "openseadragon",
+      prefixUrl: 'https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/',
+      animationTime: 0.5,
+      blendTime: 0.1,
+      constrainDuringPan: true,
+      maxZoomPixelRatio: 2,
       minZoomLevel: 1,
-      defaultZoomLevel: 1,
+      visibilityRatio: 1,
+      zoomPerScroll: 2,
+      timeout: 60000,
+      showNavigator:  true,
+      showRotationControl: true,
       sequenceMode: true,
       tileSources: [
         'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000001.jp2/info.json',
@@ -69,37 +96,78 @@ export class ImaggingComponent implements OnInit {
         'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json',
         'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000007.jp2/info.json',
       ],
-    });
+  });
 
-    this.anno = OpenSeadragon.Annotorious(this.viewer, {
-      locale: 'auto',
-      formatter: this.formatter,
-      allowEmpty: true,
-      drawOnSingleClick: false,
-      hotkey: { key: 'shift', inverted: true },
+  this.viewer.addHandler('open', function() {
+    this.viewer.scalebar({
+        pixelsPerMeter: 0.22 ? (1e6 / 0.22) : 0,
+    });
+});
+    // this.viewer = OpenSeadragon({
+    //   id: 'openseadragon',
+    //   prefixUrl:
+    //     'https://cdn.jsdelivr.net/npm/openseadragon@2.3/build/openseadragon/images/',
+
+    //   preserveViewport: true,
+    //   visibilityRatio: 1,
+    //   minZoomLevel: 1,
+    //   defaultZoomLevel: 1,
+    //   sequenceMode: true,
+    //   tileSources: [
+    //     'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000001.jp2/info.json',
+    //     'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000002.jp2/info.json',
+    //     'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000003.jp2/info.json',
+    //     'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000004.jp2/info.json',
+    //     'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000005.jp2/info.json',
+    //     'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/info.json',
+    //     'https://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000007.jp2/info.json',
+    //   ],
+    // });
+
+    let config = {
       disableEditor: true,
-    });
+      formatter: this.ColorFormatter,
+      formatters: this.ColorFormatter,
+      hotkey: { key: 'shift', inverted: true },
+      allowEmpty: true,
+      drawOnSingleClick: true,
 
-    this.anno.addAnnotation(this.sampleAnnotation);
+      };
+
+
+      // annotator = OpenSeadragon.Annotorious(viewer, config);
+
+
+      this.anno = OpenSeadragon.Annotorious(this.viewer, config);
+      Annotorious.SelectorPack(this.anno);
+      this.anno.setDrawingEnabled(true);
+      debugger
+    // this.anno = OpenSeadragon.Annotorious(this.viewer, {
+    //   locale: 'auto',
+    //   formatter: this.formatter,
+    //   allowEmpty: true,
+    //   drawOnSingleClick: true,
+    //   hotkey: { key: 'shift', inverted: true },
+    //   disableEditor: true,
+    // });
 
     // Init the plugin
     Annotorious.SelectorPack(this.anno);
 
-    // Add event handlers using .on
-    this.anno.on('createAnnotation', async (selection: any) => {
-      if (selection) {
-        debugger
-        selection.body = [{
-          type: 'TextualBody',
-          purpose: 'tagging',
-          value: 'MyTag'
-        }];
-        this.LIST.push(selection);
-      }
-      // Make sure to wait before saving!
-      await this.anno.updateSelected(selection);
-      this.anno.saveSelected();
+
+
+  }
+
+  ColorFormatter = function(annotation) {
+    let classification = annotation.bodies.find(function(b) {
+      return b.purpose == 'classification';
     });
+
+    if (classification){
+        return {
+            'style': 'stroke:' + classification.value.color + '; stroke-width:3;'
+        };
+    }
   }
 
   setTool(tool?: string) {
@@ -112,13 +180,6 @@ export class ImaggingComponent implements OnInit {
 
   clearAnnotations() {
     this.anno.clearAnnotations();
-  }
-  saveAnnotation(e: any) {
-    let that = this;
-    if (e) {
-      console.log(e);
-      that.LIST.push(e);
-    }
   }
 
   openAnnotation(annot: any) {
