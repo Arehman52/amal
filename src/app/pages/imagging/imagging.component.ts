@@ -1,3 +1,4 @@
+import { ANNOTATION } from './../../interfaces/annotation';
 
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 
@@ -14,7 +15,7 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
   anno: any;
   LIST: any[] = [];
 
-  sampleAnnotation = {
+  sampleAnnotation: ANNOTATION = {
     '@context': 'http://www.w3.org/ns/anno.jsonld',
     id: '#09475897-d2eb-4dce-aa12-ecb50771c734',
     type: 'Annotation',
@@ -31,6 +32,9 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
         value: 'xywh=1940,240,980,740',
       },
     },
+    userId: 0,
+    user: undefined,
+    imageId: 0
   };
 
   constructor() {
@@ -39,10 +43,10 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     // Add event handlers using .on
     this.anno.on('createAnnotation', async (selection: any) => {
-      debugger
+
       this.anno.setDrawingEnabled(false);
       if (selection) {
-        debugger
+
         selection.body = [{
           type: 'TextualBody',
           purpose: 'tagging',
@@ -139,9 +143,9 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
 
 
       this.anno = OpenSeadragon.Annotorious(this.viewer, config);
-      Annotorious.SelectorPack(this.anno);
+      // Annotorious.SelectorPack(this.anno);
       this.anno.setDrawingEnabled(true);
-      debugger
+
     // this.anno = OpenSeadragon.Annotorious(this.viewer, {
     //   locale: 'auto',
     //   formatter: this.formatter,
@@ -170,7 +174,8 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  setTool(tool?: string) {
+  setTool(tool: string = 'circle') {
+    debugger
     this.anno.setDrawingTool(tool);
   }
 
@@ -187,7 +192,7 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
     this.anno.fitBoundsWithConstraints(annot, false);
 
     const { snippet, transform } = this.anno.getImageSnippetById(annot?.id);
-    debugger;
+    ;
   }
 
   formatter = function (annotation) {
