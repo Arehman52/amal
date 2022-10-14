@@ -1,5 +1,28 @@
-<div class="row">
-  <div class="col-3 mr-1 WINDOW_BORDERS">
+<div class="row p-1 WINDOW_BORDERS">
+  <div class="col-3 m-1 WINDOW_BORDERS" *ngIf="createMode">
+    <h3 style="text-align: center;">Create New Annotation</h3>
+
+
+    <table>
+      <tr>
+        <th>open</th>
+      </tr>
+      <tr>
+        <td><button class="btn btn-info btn-sm" (click)="cancelSelected()">Cancel Selected</button></td>
+      </tr>
+      <tr>
+        <td><button class="btn btn-info btn-sm" (click)="clearAnnotations();">anno.clearAnnotations();</button></td>
+      </tr>
+
+      <ng-container *ngIf="LIST != null">
+        <tr *ngFor="let item of LIST">
+          <td><button class="btn btn-info btn-sm" (click)="openAnnotation(item)">view</button></td>
+        </tr>
+      </ng-container>
+    </table>
+
+  </div>
+  <div class="col-3 m-1 WINDOW_BORDERS" *ngIf="!createMode">
     <h3 style="text-align: center;">Annotations list</h3>
 
 
@@ -7,8 +30,12 @@
       <tr>
         <th>open</th>
       </tr>
-      <tr><td><button class="btn btn-info btn-sm" (click)="cancelSelected()">Cancel Selected</button></td></tr>
-      <tr><td><button class="btn btn-info btn-sm" (click)="clearAnnotations();">anno.clearAnnotations();</button></td></tr>
+      <tr>
+        <td><button class="btn btn-info btn-sm" (click)="cancelSelected()">Cancel Selected</button></td>
+      </tr>
+      <tr>
+        <td><button class="btn btn-info btn-sm" (click)="clearAnnotations();">anno.clearAnnotations();</button></td>
+      </tr>
 
       <ng-container *ngIf="LIST != null">
         <tr *ngFor="let item of LIST">
@@ -19,7 +46,7 @@
 
   </div>
 
-  <div class="col min-vh-80 WINDOW_BORDERS">
+  <div class="col m-1 min-vh-80 WINDOW_BORDERS">
     <h3>Canvas</h3>
     <div>
       <button class="btn btn-primary btn-sm mr-1" (click)="setTool('circle')">
@@ -80,3 +107,113 @@
     <!-- /////////////////////////////////////////////////////////////////////////////// -->
   </div>
 </div>
+
+
+
+
+<ng-container>
+  <!-- Button trigger modal -->
+  <button type="button" id="openModalBtn" #openModalBtn class="btn btn-primary"
+    style="position: absolute; top: 0px; left: 0px; visibility: hidden;" data-toggle="modal"
+    data-target="#exampleModal">
+    open modal
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create New Annotation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form [formGroup]="annotForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+
+            <!-- <label for="first-name">Shape: </label>
+            <input id="first-name" type="text" formControlName="shape">
+
+            <br>
+
+            <label for="last-name">Name: </label>
+            <input id="last-name" type="text" formControlName="name">
+
+            <br>
+
+            <label for="last-name">Class: </label>
+            <input id="last-name" type="text" formControlName="class">
+
+            <br>
+
+            <label for="last-name">Description: </label>
+            <textarea id="last-name" type="text" formControlName="description"></textarea> -->
+
+
+
+            <div class="form-group row required-star">
+              <label class="col-lg-4 col-md-5 col-sm-12 px-0 col-form-label">
+                Shape
+              </label>
+              <div class="col-lg-8 col-md-6 col-sm-12 pr-0">
+                <input type="text" formControlName="shape" class="form-control" [placeholder]="'Shape'" />
+
+                <div *ngIf="isControlValid('shape')" class="invalid-feedback">
+                  <i class="fa fa-info-circle fa-errorIcon" aria-hidden="true" tooltip="Shape is required">
+                  </i>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row required-star">
+              <label class="col-lg-4 col-md-5 col-sm-12 px-0 col-form-label">
+                Name
+              </label>
+              <div class="col-lg-8 col-md-6 col-sm-12 pr-0">
+                <input type="text" formControlName="name" class="form-control" [placeholder]="'Name'" />
+
+                <div *ngIf="isControlValid('name')" class="invalid-feedback">
+                  <i class="fa fa-info-circle fa-errorIcon" aria-hidden="true" tooltip="Name is required">
+                  </i>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row required-star">
+              <label class="col-lg-4 col-md-5 col-sm-12 px-0 col-form-label">
+                Class
+              </label>
+              <div class="col-lg-8 col-md-6 col-sm-12 pr-0">
+                <input type="text" formControlName="class" class="form-control" [placeholder]="'Class'" />
+
+                <div *ngIf="isControlValid('class')" class="invalid-feedback">
+                  <i class="fa fa-info-circle fa-errorIcon" aria-hidden="true" tooltip="Class is required">
+                  </i>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row required-star">
+              <label class="col-lg-4 col-md-5 col-sm-12 px-0 col-form-label">
+                Description
+              </label>
+              <div class="col-lg-8 col-md-6 col-sm-12 pr-0">
+                <input type="text" formControlName="description" class="form-control" [placeholder]="'Description'" />
+
+                <div *ngIf="isControlValid('description')" class="invalid-feedback">
+                  <i class="fa fa-info-circle fa-errorIcon" aria-hidden="true" tooltip="Description is required">
+                  </i>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="closeModal" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-container>

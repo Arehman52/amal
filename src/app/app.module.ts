@@ -15,7 +15,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { Error404Component } from './pages/error404/error404.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -32,6 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     HttpClientModule
   ],

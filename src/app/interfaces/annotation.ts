@@ -1,22 +1,29 @@
 export interface ANNOTATION {
-  '@context'?: string;
+  '@context': string;
   id: string;
-  userId: number;
-  user: any;
-  imageId: number;
+  type: string;
   body: __ANNOTATION_BODY[];
   target: { selector: __SELECTOR; source?: string };
-  type: string;
+  userId?: number;
+  user?: any;
+  imageId?: number;
 }
+
+
+
+
+
+
+
 export interface __SELECTOR {
   type: string;
-  conformsTo?: string,
+  conformsTo: string,
   value: string;
 }
 export interface __ANNOTATION_BODY {
   description?: string;
   name?: string;
   purpose?: string;
-  type?: string;
+  type: string;
   value: string | { id: string; code: string; color: string; description: string };
 }

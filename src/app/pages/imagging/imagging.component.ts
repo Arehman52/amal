@@ -1,9 +1,13 @@
 import { ANNOTATION } from './../../interfaces/annotation';
 
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 
 declare var OpenSeadragon: any;
 declare var Annotorious: any;
+
+import * as jquery from 'jquery';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 
 @Component({
   selector: 'app-imagging',
@@ -14,6 +18,15 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
   viewer: any;
   anno: any;
   LIST: any[] = [];
+  createMode: boolean = false;
+  // @ViewChild('openModalBtn', {static: false}) openModalBtn: ElementRef<HTMLButtonElement>;
+
+  annotForm = new FormGroup({
+    name: new FormControl(null, [Validators.required]),
+    shape: new FormControl(null, [Validators.required]),
+    description: new FormControl(null, [Validators.required]),
+    class: new FormControl(null, [Validators.required]),
+  });
 
   sampleAnnotation: ANNOTATION = {
     '@context': 'http://www.w3.org/ns/anno.jsonld',
@@ -36,13 +49,20 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
     user: undefined,
     imageId: 0
   };
+  // openModalBtn: HTMLButtonElement;
 
   constructor() {
     this.LIST = [];
+    // debugger
+    // this.openModalBtn = new HTMLButtonElement();
   }
   ngAfterViewInit(): void {
-    // Add event handlers using .on
+    // this.openModalBtn = document.getElementById('openModalBtn') as HTMLButtonElement;
+    // debugger
     this.anno.on('createAnnotation', async (selection: any) => {
+      alert("createAnnotation");
+      // this.openModalBtn.nativeElement.click();
+
 
       this.anno.setDrawingEnabled(false);
       if (selection) {
@@ -60,8 +80,39 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
     });
 
     this.anno.on('selectAnnotation', function(annotation) {
-      // The users has selected an existing annotation
+      alert("selectAnnotation");
     });
+    this.anno.on('createSelection', function(annotation) {
+      jquery('#openModalBtn').click();
+    });
+    // this.anno.on('mouseEnterAnnotation', function(annotation) {
+    //   alert("mouseEnterAnnotation");
+    // });
+    // this.anno.on('mouseLeaveAnnotation', function(annotation) {
+    //   alert("mouseLeaveAnnotation");
+    // });
+    // this.anno.on('startSelection', function(annotation) {  // when user starts drawing the annotation
+    //   alert("startSelection");
+    // });
+    this.anno.on('updateAnnotation', function(annotation) {
+      alert("updateAnnotation");
+    });
+    // this.anno.on('cancelSelected', function(annotation) {
+    //   alert("cancelSelected");
+    // });
+    this.anno.on('changeSelected', function(annotation) {
+      alert("changeSelected");
+    });
+    this.anno.on('changeSelectionTarget', function(annotation) {
+      alert("changeSelectionTarget");
+    });
+    this.anno.on('deleteAnnotation', function(annotation) {
+      alert("deleteAnnotation");
+    });
+
+    // this.anno.setDrawingEnabled(true);
+
+    // this.anno.addAnnotation(this.sampleAnnotation);
   }
 
   ngOnInit() {
@@ -103,7 +154,7 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
   });
 
   this.viewer.addHandler('open', function() {
-    this.viewer.scalebar({
+    this.viewer?.scalebar({
         pixelsPerMeter: 0.22 ? (1e6 / 0.22) : 0,
     });
 });
@@ -175,14 +226,26 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
   }
 
   setTool(tool: string = 'circle') {
-    debugger
+    this.anno.setDrawingEnabled(true);
     this.anno.setDrawingTool(tool);
+
   }
 
   cancelSelected() {
     this.anno.cancelSelected();
   }
 
+  onSubmit(){
+    if(!this.annotForm.valid)
+    {
+      alert("Form Invalid");
+      return;
+    }
+
+
+    jquery('#closeModal').click();
+
+  }
   clearAnnotations() {
     this.anno.clearAnnotations();
   }
@@ -211,4 +274,20 @@ export class ImaggingComponent implements OnInit, AfterViewInit {
       return 'long';
     }
   };
+
+  isControlValid(
+    control: string,
+    validatorType:
+      | 'required'
+      | 'email'
+      | 'pattern'
+      | 'minlength'
+      | 'maxlength'
+      | 'inValidFormat' = 'required'
+  ): boolean {
+    return (
+      // this.isFormSubmitted &&
+      this.annotForm?.get(control)?.hasError(validatorType)
+    );
+  }
 }
